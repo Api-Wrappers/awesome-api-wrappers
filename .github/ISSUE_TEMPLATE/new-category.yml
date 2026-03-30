@@ -1,0 +1,38 @@
+name: New category
+description: Propose a new category for the list.
+title: "New category: [category-name]"
+labels: ["new-category"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        New categories are only added when there are at least 3 high-quality entries to populate them.
+        Please provide all 3 entries below.
+
+  - type: input
+    id: name
+    attributes:
+      label: Category name
+      placeholder: "e.g. Database APIs"
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Why does this category deserve its own section?
+      description: Explain why these wrappers don't fit existing categories.
+    validations:
+      required: true
+
+  - type: textarea
+    id: entries
+    attributes:
+      label: Initial entries (minimum 3)
+      description: One entry per line in the standard format.
+      placeholder: |
+        - [repo-name](https://github.com/owner/repo) `Language` – Description.
+        - [repo-name](https://github.com/owner/repo) `Language` – Description.
+        - [repo-name](https://github.com/owner/repo) `Language` – Description.
+    validations:
+      required: true

@@ -1,0 +1,12 @@
+{
+  "name": "awesome-api-wrappers",
+  "private": true,
+  "scripts": {
+    "validate": "bun scripts/validate-links.ts",
+    "lint": "markdownlint-cli2 README.md CONTRIBUTING.md"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "markdownlint-cli2": "^0.17.2"
+  }
+}

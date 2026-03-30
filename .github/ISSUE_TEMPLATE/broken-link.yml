@@ -1,0 +1,41 @@
+name: Broken link
+description: Report a link in the list that is dead or redirects incorrectly.
+title: "Broken link: [repo-name]"
+labels: ["broken-link"]
+body:
+  - type: input
+    id: entry
+    attributes:
+      label: Entry name
+      description: The display name of the entry with the broken link.
+      placeholder: "e.g. some-wrapper"
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: Broken URL
+      placeholder: "https://github.com/owner/repo"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: Issue type
+      options:
+        - 404 / repository not found
+        - Repository archived
+        - Repository transferred (new URL exists)
+        - Domain no longer resolves
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: replacement
+    attributes:
+      label: Replacement URL (if known)
+      description: Leave blank if there is no replacement.
+      placeholder: "https://github.com/new-owner/new-repo"

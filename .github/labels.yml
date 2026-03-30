@@ -1,0 +1,23 @@
+- name: addition
+  color: "0075ca"
+  description: New wrapper submission
+
+- name: broken-link
+  color: "d73a4a"
+  description: A link in the list is dead or broken
+
+- name: new-category
+  color: "e4e669"
+  description: Proposal for a new list category
+
+- name: duplicate
+  color: "cfd3d7"
+  description: This issue or PR already exists
+
+- name: needs-review
+  color: "fbca04"
+  description: Awaiting maintainer review
+
+- name: invalid
+  color: "e4e669"
+  description: Does not meet inclusion criteria

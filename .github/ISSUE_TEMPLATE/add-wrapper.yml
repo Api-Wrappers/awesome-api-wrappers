@@ -1,0 +1,82 @@
+name: Add a wrapper
+description: Suggest a new API wrapper for inclusion in the list.
+title: "Add: [repo-name]"
+labels: ["addition"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a wrapper. Please fill out every field — incomplete submissions will be closed without review.
+
+  - type: input
+    id: repo
+    attributes:
+      label: Repository URL
+      description: Full GitHub URL of the wrapper.
+      placeholder: "https://github.com/owner/repo"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options:
+        - TypeScript
+        - JavaScript
+        - Python
+        - Go
+        - Rust
+        - Java
+        - C#
+        - Ruby
+        - PHP
+        - Swift
+        - Kotlin
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Which existing category does this belong to? If none fit, select "New category needed".
+      options:
+        - AI & Machine Learning
+        - Communication & Messaging
+        - Developer Platforms
+        - Social Media
+        - Payments & Finance
+        - CPaaS & Notifications
+        - Maps & Location
+        - Gaming
+        - Anime & Manga
+        - New category needed
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Proposed description
+      description: One sentence ending with a period. No marketing language.
+      placeholder: "Official Foo Python SDK for bar operations with baz support."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Inclusion criteria
+      options:
+        - label: The repo has been active within the past 12 months
+          required: true
+        - label: The repo has a README with usage examples
+          required: true
+        - label: This is not a general HTTP client or SDK generator
+          required: true
+        - label: There is no existing entry for this repo in the list
+          required: true
+        - label: I have read CONTRIBUTING.md
+          required: true
