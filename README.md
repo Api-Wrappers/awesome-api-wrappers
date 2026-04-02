@@ -58,22 +58,27 @@ record in real-world use.
 ### 🤖 AI & Machine Learning
 
 - [anthropic-sdk-python](https://github.com/anthropics/anthropic-sdk-python) –
-  Python SDK for the Claude API. `Python` · `Official`
+  Python SDK for the Claude API with sync and async clients, streaming, and tool
+  use. `Python` · `Official`
 - [anthropic-sdk-typescript](https://github.com/anthropics/anthropic-sdk-typescript)
-  – TypeScript SDK for the Claude API. `TypeScript` · `Official`
+  – TypeScript SDK for the Claude API with full type coverage, streaming, and
+  tool use. `TypeScript` · `Official`
 - [cohere-python](https://github.com/cohere-ai/cohere-python) – Python SDK for
-  generation, embeddings, and classification. `Python` · `Official`
-- [groq-python](https://github.com/groq/groq-python) – Python SDK for Groq API
-  access and LLM inference. `Python` · `Official`
+  Cohere generation, embeddings, and classification. `Python` · `Official`
+- [groq-python](https://github.com/groq/groq-python) – Python SDK for
+  low-latency LLM inference via the Groq API. `Python` · `Official`
 - [huggingface.js](https://github.com/huggingface/huggingface.js) – JavaScript
-  and TypeScript SDK for Hugging Face services. `TypeScript` · `Official`
+  and TypeScript SDK for Hugging Face inference, datasets, and the Hub API.
+  `TypeScript` · `Official`
 - [huggingface_hub](https://github.com/huggingface/huggingface_hub) – Python
-  client for the Hugging Face Hub, downloads, and inference APIs. `Python` ·
-  `Official`
-- [openai-node](https://github.com/openai/openai-node) – Node.js SDK for the
-  OpenAI API. `TypeScript` · `Official`
+  client for the Hugging Face Hub covering model downloads, inference, and
+  repository management. `Python` · `Official`
+- [openai-node](https://github.com/openai/openai-node) – TypeScript SDK for the
+  OpenAI API with streaming, function calling, and typed responses. `TypeScript`
+  · `Official`
 - [openai-python](https://github.com/openai/openai-python) – Python SDK for the
-  OpenAI API. `Python` · `Official`
+  OpenAI API with sync and async clients, streaming, and structured outputs.
+  `Python` · `Official`
 
 ### 💬 Communication & Messaging
 
@@ -107,6 +112,17 @@ record in real-world use.
 - [PyGithub](https://github.com/PyGithub/PyGithub) – Python library for the
   GitHub REST API. `Python` · `Community`
 
+### ☁️ Cloud & Infrastructure
+
+- [aws-sdk-js-v3](https://github.com/aws/aws-sdk-js-v3) – Modular AWS SDK for
+  JavaScript and TypeScript with per-service packages and middleware support.
+  `TypeScript` · `Official`
+- [boto3](https://github.com/boto/boto3) – AWS SDK for Python covering most AWS
+  services with both resource and client interfaces. `Python` · `Official`
+- [firebase-admin-node](https://github.com/firebase/firebase-admin-node) –
+  Firebase Admin SDK for Node.js covering Auth, Firestore, Storage, and
+  Messaging. `TypeScript` · `Official`
+
 ### 🌐 Social Media
 
 - [node-twitter-api-v2](https://github.com/PLhery/node-twitter-api-v2) –
@@ -129,11 +145,19 @@ record in real-world use.
 
 ### 🗺 Maps & Location
 
+- [google-maps-services-js](https://github.com/googlemaps/google-maps-services-js)
+  – Node.js client for Google Maps web services including geocoding, directions,
+  and Places. `TypeScript` · `Official`
 - [mapbox-sdk-js](https://github.com/mapbox/mapbox-sdk-js) – JavaScript SDK for
   Mapbox APIs. `TypeScript` · `Official`
 
 ### 🎬 Media & Entertainment
 
+- [spotipy](https://github.com/spotipy-dev/spotipy) – Lightweight Python library
+  for the Spotify Web API with full endpoint coverage and OAuth support.
+  `Python` · `Community`
+- [spotify-web-api-ts-sdk](https://github.com/spotify/spotify-web-api-ts-sdk) –
+  Official TypeScript SDK for the Spotify Web API. `TypeScript` · `Official`
 - [tmdb-wrapper](https://github.com/Api-Wrappers/tmdb-wrapper) – Typed TMDB API
   wrapper. `TypeScript` · `Community`
 
@@ -181,23 +205,17 @@ API, or no longer provide a good developer experience.
 
 ## Contributing
 
-Contributions are welcome, but please keep the bar high.
-
-Before opening a PR:
-
-- make sure the project meets the inclusion criteria
-- place it in the most relevant category
-- keep the description short and factual
-- avoid duplicates
-- sort entries alphabetically within sections
-
-If you're submitting your own project, that's completely fine — just be clear
-about its maintenance status and documentation quality.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a PR. The short version:
+meet the inclusion criteria, match the entry format exactly, and keep
+descriptions factual.
 
 ---
 
 ## Related Lists
 
+- [Public APIs](https://github.com/public-apis/public-apis) — if you're looking
+  for what to wrap, start here
+- [Awesome Go](https://github.com/avelino/awesome-go)
 - [Awesome Node.js](https://github.com/sindresorhus/awesome-nodejs)
 - [Awesome Python](https://github.com/vinta/awesome-python)
 
