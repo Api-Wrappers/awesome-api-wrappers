@@ -91,8 +91,6 @@ record in real-world use.
   – Telegram Bot API wrapper with a full bot framework. `Python` · `Community`
 - [serenity](https://github.com/serenity-rs/serenity) – Async Discord library
   for Rust. `Rust` · `Community`
-- [telegraf](https://github.com/telegraf/telegraf) – Telegram bot framework for
-  Node.js. `TypeScript` · `Community`
 - [twilio-node](https://github.com/twilio/twilio-node) – Twilio helper library
   for Node.js. `TypeScript` · `Official`
 - [twilio-python](https://github.com/twilio/twilio-python) – Twilio helper
@@ -115,8 +113,6 @@ record in real-world use.
   Full-featured Twitter/X API v2 client for Node.js. `TypeScript` · `Community`
 - [praw](https://github.com/praw-dev/praw) – Python Reddit API Wrapper with an
   idiomatic object model. `Python` · `Community`
-- [snoowrap](https://github.com/not-an-aardvark/snoowrap) – Promise-based
-  Reddit API wrapper for JavaScript. `JavaScript` · `Community`
 - [tweepy](https://github.com/tweepy/tweepy) – Python wrapper for the
   Twitter/X API with OAuth and streaming support. `Python` · `Community`
 
@@ -133,9 +129,6 @@ record in real-world use.
 
 ### 🗺 Maps & Location
 
-- [google-maps-services-python](https://github.com/googlemaps/google-maps-services-python)
-  – Python client for Google Maps web services including geocoding, directions,
-  and Places. `Python` · `Official`
 - [mapbox-sdk-js](https://github.com/mapbox/mapbox-sdk-js) – JavaScript SDK for
   Mapbox APIs. `TypeScript` · `Official`
 
@@ -150,8 +143,6 @@ record in real-world use.
   API. `Go` · `Community`
 - [igdb-wrapper](https://github.com/Api-Wrappers/igdb-wrapper) – Type-safe IGDB
   client with a fluent query builder. `TypeScript` · `Community`
-- [steam](https://github.com/ValvePython/steam) – Python client for the Steam
-  Web API and related services. `Python` · `Community`
 - [twurple](https://github.com/twurple/twurple) – Twitch API library covering
   Helix, EventSub, Chat, and more. `TypeScript` · `Community`
 
@@ -207,10 +198,8 @@ about its maintenance status and documentation quality.
 
 ## Related Lists
 
-- [Awesome APIs](https://github.com/lavie/Awesome-APIs)
 - [Awesome Node.js](https://github.com/sindresorhus/awesome-nodejs)
 - [Awesome Python](https://github.com/vinta/awesome-python)
-- [Awesome TypeScript](https://github.com/dzharii/awesome-typescript)
 
 ---
 

@@ -43,3 +43,5 @@ jobs:
 
       - name: Run link validator
         run: bun run validate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -11,7 +11,7 @@
 ## Entry being added
 
 ```
-- [repo-name](https://github.com/owner/repo) `Language` – Description.
+- [repo-name](https://github.com/owner/repo) – Description. `Language` · `Official/Community`
 ```
 
 ## Why this wrapper belongs on the list
