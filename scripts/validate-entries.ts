@@ -30,11 +30,20 @@ const MARKETING_WORDS = [
   "world-class",
 ];
 
+const DESCRIPTION_MAX_LENGTH = 120;
+
 interface Violation {
   section: string;
   lineNum: number;
   entry: string;
   issues: string[];
+}
+
+interface EntryMeta {
+  name: string;
+  repoKey: string | null;
+  lineNum: number;
+  entry: string;
 }
 
 // Strip fenced code blocks while preserving line count (so line numbers stay accurate)
@@ -60,13 +69,63 @@ function joinEntryLines(
   return { joined, endIdx: i - 1 };
 }
 
+function parseGitHubRepo(
+  url: string
+): { owner: string; repo: string } | null {
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "https:" || parsed.hostname !== "github.com") {
+      return null;
+    }
+
+    const parts = parsed.pathname.replace(/^\/|\/$/g, "").split("/");
+    if (parts.length !== 2 || !parts[0] || !parts[1]) return null;
+
+    return { owner: parts[0], repo: parts[1] };
+  } catch {
+    return null;
+  }
+}
+
+function parseEntryMeta(joined: string, lineNum: number): EntryMeta | null {
+  const match = joined.match(/^- \[([^\]]+)\]\((https?:\/\/[^)]+)\)/);
+  if (!match) return null;
+
+  const repo = parseGitHubRepo(match[2]);
+
+  return {
+    name: match[1],
+    repoKey: repo
+      ? `${repo.owner.toLowerCase()}/${repo.repo.toLowerCase()}`
+      : null,
+    lineNum,
+    entry: joined,
+  };
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 function validateEntry(joined: string): string[] {
   const issues: string[] = [];
+  const meta = parseEntryMeta(joined, 0);
 
   // URL must be a full GitHub URL
   const urlMatch = joined.match(/\]\((https?:\/\/[^)]+)\)/);
-  if (urlMatch && !urlMatch[1].startsWith("https://github.com/")) {
-    issues.push(`URL must be a full GitHub URL, got: ${urlMatch[1]}`);
+  if (!urlMatch) {
+    issues.push("entry must include a full GitHub URL");
+  } else {
+    const repo = parseGitHubRepo(urlMatch[1]);
+    if (!repo) {
+      issues.push(
+        `URL must be a full GitHub repository URL, got: ${urlMatch[1]}`
+      );
+    } else if (meta && meta.name !== repo.repo) {
+      issues.push(
+        `link text must match repository name \`${repo.repo}\`, got \`${meta.name}\``
+      );
+    }
   }
 
   // Must have em dash (–) between link and description, not a hyphen
@@ -103,15 +162,80 @@ function validateEntry(joined: string): string[] {
     issues.push("description must end with a period");
   }
 
+  const descriptionMatch = beforeTags.match(/\) – (.+)$/);
+  if (descriptionMatch) {
+    const descriptionLength = descriptionMatch[1].length;
+    if (descriptionLength >= DESCRIPTION_MAX_LENGTH) {
+      issues.push(
+        `description must be under ${DESCRIPTION_MAX_LENGTH} characters (${descriptionLength})`
+      );
+    }
+  }
+
   // No marketing language
   const lower = joined.toLowerCase();
   for (const word of MARKETING_WORDS) {
-    if (lower.includes(word)) {
+    const pattern = new RegExp(`\\b${escapeRegExp(word)}\\b`, "i");
+    if (pattern.test(lower)) {
       issues.push(`contains marketing word: "${word}"`);
     }
   }
 
   return issues;
+}
+
+function validateSectionOrder(
+  section: string,
+  entries: EntryMeta[]
+): Violation[] {
+  const violations: Violation[] = [];
+  const sorted = [...entries].sort((a, b) =>
+    a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+  );
+
+  for (let i = 0; i < entries.length; i++) {
+    if (entries[i].name !== sorted[i].name) {
+      violations.push({
+        section,
+        lineNum: entries[i].lineNum,
+        entry: entries[i].entry,
+        issues: [
+          `entries must be sorted alphabetically; expected \`${sorted[i].name}\` here`,
+        ],
+      });
+      break;
+    }
+  }
+
+  return violations;
+}
+
+function validateSectionDuplicates(
+  section: string,
+  entries: EntryMeta[]
+): Violation[] {
+  const violations: Violation[] = [];
+  const seen = new Map<string, EntryMeta>();
+
+  for (const entry of entries) {
+    if (!entry.repoKey) continue;
+
+    const existing = seen.get(entry.repoKey);
+    if (existing) {
+      violations.push({
+        section,
+        lineNum: entry.lineNum,
+        entry: entry.entry,
+        issues: [
+          `duplicate repository entry also listed on line ${existing.lineNum}`,
+        ],
+      });
+    } else {
+      seen.set(entry.repoKey, entry);
+    }
+  }
+
+  return violations;
 }
 
 function run(): void {
@@ -125,6 +249,7 @@ function run(): void {
 
   const lines = stripCodeBlocks(markdown).split("\n");
   const violations: Violation[] = [];
+  const entriesBySection = new Map<string, EntryMeta[]>();
 
   // Rather than hardcoding section names, track position in the document.
   // Wrapper entries appear in two places:
@@ -158,6 +283,14 @@ function run(): void {
     if (inValidatedSection && line.startsWith("- [")) {
       const { joined, endIdx } = joinEntryLines(lines, i);
       const issues = validateEntry(joined);
+      const meta = parseEntryMeta(joined, i + 1);
+
+      if (meta) {
+        const sectionEntries = entriesBySection.get(currentSection) ?? [];
+        sectionEntries.push(meta);
+        entriesBySection.set(currentSection, sectionEntries);
+      }
+
       if (issues.length > 0) {
         violations.push({
           section: currentSection,
@@ -171,6 +304,11 @@ function run(): void {
     }
 
     i++;
+  }
+
+  for (const [section, entries] of entriesBySection) {
+    violations.push(...validateSectionOrder(section, entries));
+    violations.push(...validateSectionDuplicates(section, entries));
   }
 
   if (violations.length === 0) {

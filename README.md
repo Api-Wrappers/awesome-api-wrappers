@@ -67,12 +67,12 @@ record in real-world use.
   Cohere generation, embeddings, and classification. `Python` · `Official`
 - [groq-python](https://github.com/groq/groq-python) – Python SDK for
   low-latency LLM inference via the Groq API. `Python` · `Official`
-- [huggingface.js](https://github.com/huggingface/huggingface.js) – JavaScript
-  and TypeScript SDK for Hugging Face inference, datasets, and the Hub API.
-  `TypeScript` · `Official`
 - [huggingface_hub](https://github.com/huggingface/huggingface_hub) – Python
   client for the Hugging Face Hub covering model downloads, inference, and
   repository management. `Python` · `Official`
+- [huggingface.js](https://github.com/huggingface/huggingface.js) – JavaScript
+  and TypeScript SDK for Hugging Face inference, datasets, and the Hub API.
+  `TypeScript` · `Official`
 - [openai-node](https://github.com/openai/openai-node) – TypeScript SDK for the
   OpenAI API with streaming, function calling, and typed responses. `TypeScript`
   · `Official`
@@ -153,11 +153,11 @@ record in real-world use.
 
 ### 🎬 Media & Entertainment
 
+- [spotify-web-api-ts-sdk](https://github.com/spotify/spotify-web-api-ts-sdk) –
+  Official TypeScript SDK for the Spotify Web API. `TypeScript` · `Official`
 - [spotipy](https://github.com/spotipy-dev/spotipy) – Lightweight Python library
   for the Spotify Web API with full endpoint coverage and OAuth support.
   `Python` · `Community`
-- [spotify-web-api-ts-sdk](https://github.com/spotify/spotify-web-api-ts-sdk) –
-  Official TypeScript SDK for the Spotify Web API. `TypeScript` · `Official`
 - [tmdb-wrapper](https://github.com/Api-Wrappers/tmdb-wrapper) – Typed TMDB API
   wrapper. `TypeScript` · `Community`
 
