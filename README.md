@@ -1,8 +1,14 @@
-# Awesome API Wrappers [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
+<h1 align="center">Awesome API Wrappers</h1>
 
-![GitHub Repo stars](https://img.shields.io/github/stars/api-wrappers/awesome-api-wrappers)
+<p align="center">
+  A curated list of API wrappers and SDKs that are actually pleasant to use.
+</p>
 
-> A curated list of API wrappers and SDKs that are actually pleasant to use.
+<p align="center">
+  <a href="https://awesome.re"><img alt="Awesome" src="https://awesome.re/badge.svg"></a>
+  <a href="https://github.com/Api-Wrappers/awesome-api-wrappers/actions/workflows/validate.yml"><img alt="Validation" src="https://github.com/Api-Wrappers/awesome-api-wrappers/actions/workflows/validate.yml/badge.svg"></a>
+  <a href="https://github.com/Api-Wrappers/awesome-api-wrappers/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/api-wrappers/awesome-api-wrappers"></a>
+</p>
 
 Raw HTTP APIs are manageable at first, but the repetitive parts add up fast:
 authentication, retries, pagination, rate limits, serialization, versioning, and
