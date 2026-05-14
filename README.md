@@ -1,5 +1,7 @@
 # Awesome API Wrappers [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
 
+![GitHub Repo stars](https://img.shields.io/github/stars/api-wrappers/awesome-api-wrappers)
+
 > A curated list of API wrappers and SDKs that are actually pleasant to use.
 
 Raw HTTP APIs are manageable at first, but the repetitive parts add up fast:
@@ -13,8 +15,6 @@ interface that feels natural in the language it targets.
 This is intentionally selective. The goal is not to list every API client on
 GitHub. The goal is to surface the ones people can realistically start with and
 trust.
-
-If this list helps you choose a wrapper, [star the repo](https://github.com/Api-Wrappers/awesome-api-wrappers) to help other developers find it.
 
 `Official` means maintained by the API provider. `Community` means maintained
 independently.
