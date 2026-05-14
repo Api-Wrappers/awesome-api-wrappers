@@ -44,6 +44,23 @@ function parseGitHubRepo(url: string): { owner: string; repo: string } | null {
   }
 }
 
+function parseNpmPackagePage(url: string): string | null {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname !== "www.npmjs.com" && parsed.hostname !== "npmjs.com") {
+      return null;
+    }
+
+    const prefix = "/package/";
+    if (!parsed.pathname.startsWith(prefix)) return null;
+
+    const packageName = parsed.pathname.slice(prefix.length).replace(/\/$/, "");
+    return packageName ? decodeURIComponent(packageName) : null;
+  } catch {
+    return null;
+  }
+}
+
 async function fetchGitHubMeta(
   owner: string,
   repo: string,
@@ -83,15 +100,37 @@ async function checkLink(
 
   // HTTP reachability check
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(url, {
-      method: "HEAD",
-      signal: controller.signal,
-      headers: { "User-Agent": "awesome-api-wrappers link validator" },
-      redirect: "follow",
-    });
-    clearTimeout(timeout);
+    const check = async (method: "HEAD" | "GET") => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+      try {
+        return await fetch(url, {
+          method,
+          signal: controller.signal,
+          headers: { "User-Agent": "awesome-api-wrappers link validator" },
+          redirect: "follow",
+        });
+      } finally {
+        clearTimeout(timeout);
+      }
+    };
+
+    let res = await check("HEAD");
+    if (res.status === 403 || res.status === 405) {
+      res = await check("GET");
+    }
+
+    const npmPackage = res.status >= 400 ? parseNpmPackagePage(url) : null;
+    if (npmPackage) {
+      res = await fetch(
+        `https://registry.npmjs.org/${encodeURIComponent(npmPackage)}`,
+        {
+          method: "HEAD",
+          headers: { "User-Agent": "awesome-api-wrappers link validator" },
+          redirect: "follow",
+        }
+      );
+    }
     status = res.status;
   } catch (err) {
     error = err instanceof Error ? err.message : String(err);

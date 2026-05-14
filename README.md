@@ -14,6 +14,8 @@ This is intentionally selective. The goal is not to list every API client on
 GitHub. The goal is to surface the ones people can realistically start with and
 trust.
 
+If this list helps you choose a wrapper, [star the repo](https://github.com/Api-Wrappers/awesome-api-wrappers) to help other developers find it.
+
 `Official` means maintained by the API provider. `Community` means maintained
 independently.
 
@@ -22,6 +24,7 @@ independently.
 ## Contents
 
 - [Maintainer Picks](#maintainer-picks)
+- [Api-Wrappers Projects](#api-wrappers-projects)
 - [By Category](#by-category)
 - [Inclusion Criteria](#inclusion-criteria)
 - [Contributing](#contributing)
@@ -50,6 +53,20 @@ record in real-world use.
   the Twitter/X API with OAuth and streaming support. `Python` · `Community`
 - [twurple](https://github.com/twurple/twurple) – Well-rounded Twitch library
   covering Helix, EventSub, chat, and auth flows. `TypeScript` · `Community`
+
+---
+
+## Api-Wrappers Projects
+
+These are maintained by the organization behind this list. They are included
+here because they meet the same criteria as the rest of the list: published
+packages, typed APIs, docs, examples, tests, and recent maintenance.
+
+| Project | Package | Good fit |
+| --- | --- | --- |
+| [tmdb-wrapper](https://github.com/Api-Wrappers/tmdb-wrapper) | [`@api-wrappers/tmdb-wrapper`](https://www.npmjs.com/package/@api-wrappers/tmdb-wrapper) | TMDB movie, TV, search, discover, watch-provider, session, and image workflows. |
+| [anilist-wrapper](https://github.com/Api-Wrappers/anilist-wrapper) | [`@api-wrappers/anilist-wrapper`](https://www.npmjs.com/package/@api-wrappers/anilist-wrapper) | AniList anime, manga, character, staff, user, media-list, and raw GraphQL workflows. |
+| [igdb-wrapper](https://github.com/Api-Wrappers/igdb-wrapper) | [`@api-wrappers/igdb-wrapper`](https://www.npmjs.com/package/@api-wrappers/igdb-wrapper) | IGDB APICalypse queries, typed field selection, OAuth, pagination, and image URLs. |
 
 ---
 
@@ -158,22 +175,25 @@ record in real-world use.
 - [spotipy](https://github.com/spotipy-dev/spotipy) – Lightweight Python library
   for the Spotify Web API with full endpoint coverage and OAuth support.
   `Python` · `Community`
-- [tmdb-wrapper](https://github.com/Api-Wrappers/tmdb-wrapper) – Typed TMDB API
-  wrapper. `TypeScript` · `Community`
+- [tmdb-wrapper](https://github.com/Api-Wrappers/tmdb-wrapper) – Typed TMDB v3
+  client covering search, discover, images, watch providers, and sessions.
+  `TypeScript` · `Community`
 
 ### 🎮 Gaming
 
 - [helix](https://github.com/nicklaw5/helix) – Go client for the Twitch Helix
   API. `Go` · `Community`
 - [igdb-wrapper](https://github.com/Api-Wrappers/igdb-wrapper) – Type-safe IGDB
-  client with a fluent query builder. `TypeScript` · `Community`
+  client with APICalypse queries, OAuth, pagination, and image helpers.
+  `TypeScript` · `Community`
 - [twurple](https://github.com/twurple/twurple) – Twitch API library covering
   Helix, EventSub, Chat, and more. `TypeScript` · `Community`
 
 ### 📺 Anime & Manga
 
 - [anilist-wrapper](https://github.com/Api-Wrappers/anilist-wrapper) – AniList
-  GraphQL API wrapper for Node.js. `TypeScript` · `Community`
+  GraphQL client for anime, manga, characters, staff, users, and media lists.
+  `TypeScript` · `Community`
 - [AnilistPython](https://github.com/ReZeroE/AnilistPython) – Python library
   for the AniList GraphQL API. `Python` · `Community`
 
