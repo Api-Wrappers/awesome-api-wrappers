@@ -1,84 +1,123 @@
 # Contributing to Awesome API Wrappers
 
-Thanks for helping improve this list. Read these guidelines before submitting.
+Thanks for helping improve this list. The goal is to keep it useful for
+developers choosing API wrappers for real projects, not to collect every SDK on
+GitHub.
 
 ---
 
-## Adding an Entry
+## Before You Submit
 
-1. Fork the repository
-2. Add your entry to the correct category in `README.md`
-3. Follow the formatting rules below
-4. Open a pull request with a clear title — e.g. `Add stripe-go to Payments & Finance`
+A wrapper must meet all of these requirements:
+
+- actively maintained and compatible with the current upstream API
+- documented with installation and usage examples
+- licensed
+- published or documented through a package page
+- linked to a public GitHub repository
+- focused on a specific public API
+- free of spam, affiliate links, paid placement, and unverifiable claims
+
+Do not submit:
+
+- general HTTP clients such as Axios, Requests, or Reqwest
+- SDK generators unless the submitted project is a specific generated wrapper
+- abandoned repositories
+- duplicate wrappers for the same API and language without a clear reason
+- brand-new projects with no docs, no package, or no real usage evidence
+
+---
+
+## How to Add an Entry
+
+1. Fork the repository.
+2. Add the row to the best category in `README.md`.
+3. Keep the section sorted alphabetically by `Name`.
+4. Use factual notes that can be verified from the package page or repository.
+5. Open a pull request with a clear title, such as `Add stripe-go to Payments`.
+
+If you are unsure whether a wrapper belongs, open an **Add a wrapper** issue
+first.
 
 ---
 
 ## Entry Format
 
-```markdown
-- [repo-name](https://github.com/owner/repo) – Short description. `Language` · `Official`
-- [repo-name](https://github.com/owner/repo) – Short description. `Language` · `Community`
-```
-
-**Examples:**
+Every category uses the same table shape:
 
 ```markdown
-- [discord.js](https://github.com/discordjs/discord.js) – Feature-rich Discord API library for Node.js covering gateway events, REST, and voice. `TypeScript` · `Community`
-- [stripe-node](https://github.com/stripe/stripe-node) – Stripe SDK for Node.js with strong TypeScript support and webhook tooling. `TypeScript` · `Official`
+| Name | API | Language | Official / community | Package link | GitHub link | Notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| repo-name | API name | TypeScript | Official | [npm](https://www.npmjs.com/package/example) | [GitHub](https://github.com/owner/repo) | Short factual note. |
 ```
 
-**Rules:**
+### Field Rules
 
-- Use the repository name as the link text, not a marketing or display name
-- Use the full GitHub URL as the link target
-- Description comes right after the em dash (`–`), before the language tag
-- Description must be one sentence ending with a period, under 120 characters
-- No marketing language ("best", "amazing", "powerful", "blazing fast")
-- Language tag must be one of: `TypeScript`, `JavaScript`, `Python`, `Go`, `Rust`, `Java`, `C#`, `Ruby`, `PHP`, `Swift`, `Kotlin`
-- End with `· \`Official\`` if the wrapper is maintained by the API provider, or `· \`Community\`` if independently maintained
-- Use an em dash (`–`) not a hyphen (`-`) between the link and the description
+- `Name` should match the repository or package name people search for.
+- `API` should name the upstream service, such as Stripe, Discord, or GitHub.
+- `Language` should be the primary language developers install the wrapper for.
+- `Official / community` must be `Official` or `Community`.
+- `Package link` must point to the registry or package documentation page.
+- `GitHub link` must point to the source repository.
+- `Notes` should be one short factual sentence without marketing language.
+
+Allowed language values:
+
+`TypeScript`, `JavaScript`, `Python`, `Go`, `Rust`, `Java`, `C#`, `Ruby`,
+`PHP`, `Swift`, `Kotlin`
+
+Use `TypeScript` for packages that are authored in TypeScript or ship first-class
+TypeScript types.
 
 ---
 
-## Inclusion Criteria
+## Writing Good Notes
 
-Your submission **must** meet all of these:
+Good notes are specific and verifiable:
 
-- [ ] Actively maintained — commits or releases within the past 12 months
-- [ ] Has documentation — at minimum a README with usage examples
-- [ ] Not experimental — stable enough for production use, or clearly labeled otherwise
-- [ ] Wraps a specific public API — not a general HTTP client or SDK generator
+- `Typed Node SDK with webhook helpers and broad Stripe API coverage.`
+- `Async Rust client for GitHub REST endpoints with typed builders.`
+- `Python SDK with sync and async clients, streaming, uploads, and typed helpers.`
 
-Your submission **should ideally** have:
+Avoid:
 
-- [ ] Published package (npm, PyPI, crates.io, etc.)
-- [ ] Type safety (TypeScript definitions, Python type hints, etc.)
-- [ ] Test coverage
-
----
-
-## What Not to Submit
-
-- General HTTP clients (Axios, Requests, Reqwest, etc.)
-- SDK generators (OpenAPI Generator, Kiota, etc.)
-- Abandoned repositories — nothing in 2+ years
-- A duplicate entry for an API that already has a listing in the same language
-- Your own brand-new project with no users yet — wait until it has some real adoption
-- Repos you haven't personally used or vetted
+- marketing claims like "best", "ultimate", "world-class", or "blazing fast"
+- popularity claims unless they are generated automatically
+- vague notes like "A good wrapper for the API"
+- copied marketing text from a package page
 
 ---
 
 ## Adding a New Category
 
-If nothing fits, you can propose a new category. It needs at least 3 entries to justify the addition. Also add it to the Contents table at the top of `README.md`.
+Open an issue before adding a category. A new category should have at least
+three maintained wrappers and should not overlap heavily with an existing
+category.
+
+If accepted, add the category to:
+
+- the `Contents` list in `README.md`
+- the `Categories` section in `README.md`
+- the Add a wrapper issue template
+- the entry validator in `scripts/validate-entries.ts`
 
 ---
 
 ## Pull Request Checklist
 
-- [ ] I have read this file
-- [ ] Entry is in the correct section, sorted alphabetically within it
-- [ ] Formatting matches existing entries exactly
-- [ ] The repository link resolves and the project meets the inclusion criteria above
-- [ ] No existing entry for this repo is already in the list
-- [ ] PR title follows the pattern: `Add <repo-name> to <Category>`
+- [ ] I have read this file.
+- [ ] The wrapper is maintained.
+- [ ] The wrapper has docs with usage examples.
+- [ ] The wrapper has a license.
+- [ ] The row links to both a package page and a GitHub repository.
+- [ ] The row is in the correct category.
+- [ ] The category remains sorted alphabetically by `Name`.
+- [ ] The note is factual, short, and free of marketing language.
+- [ ] The PR does not add stars, downloads, latest release dates, or other manually stale metadata.
+
+Run these checks locally when possible:
+
+```bash
+bun run lint
+bun run check
+```

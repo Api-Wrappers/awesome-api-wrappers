@@ -33,7 +33,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.payload.pull_request.number,
-                body: `👋 Thanks for your first contribution to **Awesome API Wrappers**, @${context.payload.pull_request.user.login}!\n\nA maintainer will review your submission shortly. In the meantime, double-check that your entry:\n- Follows the [entry format](https://github.com/Api-Wrappers/awesome-api-wrappers/blob/main/CONTRIBUTING.md#entry-format)\n- Is placed alphabetically within the correct section\n- Has a description that ends with a period and contains no marketing language\n\nWe appreciate you helping make this list better! 🙌`,
+                body: `👋 Thanks for your first contribution to **Awesome API Wrappers**, @${context.payload.pull_request.user.login}!\n\nA maintainer will review your submission shortly. In the meantime, double-check that your entry:\n- Follows the [entry format](https://github.com/Api-Wrappers/awesome-api-wrappers/blob/main/CONTRIBUTING.md#entry-format)\n- Links to both a package page and a GitHub repository\n- Is placed alphabetically within the correct category\n- Has a short factual note with no marketing language\n\nWe appreciate you helping make this list better! 🙌`,
               });
             }
 

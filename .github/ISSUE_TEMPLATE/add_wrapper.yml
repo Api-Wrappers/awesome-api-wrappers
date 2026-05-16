@@ -1,0 +1,122 @@
+name: Add a wrapper
+description: Suggest a maintained API wrapper or SDK for the list.
+title: "Add: <repo-name>"
+labels: ["addition", "needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggest wrappers that are maintained, documented, licensed, and useful in real projects.
+        Incomplete or promotional submissions may be closed without review.
+
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: Repository or package name as it should appear in the table.
+      placeholder: "stripe-node"
+    validations:
+      required: true
+
+  - type: input
+    id: api
+    attributes:
+      label: API
+      description: Upstream API or service wrapped by the project.
+      placeholder: "Stripe"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Payments
+        - Communication
+        - Media / Entertainment
+        - Gaming
+        - Anime / Manga
+        - Social
+        - Cloud / Infrastructure
+        - AI / ML
+        - Developer Tools
+        - Misc
+        - New category needed
+    validations:
+      required: true
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options:
+        - TypeScript
+        - JavaScript
+        - Python
+        - Go
+        - Rust
+        - Java
+        - C#
+        - Ruby
+        - PHP
+        - Swift
+        - Kotlin
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ownership
+    attributes:
+      label: Official or community
+      options:
+        - Official
+        - Community
+    validations:
+      required: true
+
+  - type: input
+    id: package_url
+    attributes:
+      label: Package link
+      description: Registry or package documentation URL.
+      placeholder: "https://www.npmjs.com/package/example"
+    validations:
+      required: true
+
+  - type: input
+    id: github_url
+    attributes:
+      label: GitHub link
+      description: Full GitHub repository URL.
+      placeholder: "https://github.com/owner/repo"
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: One short factual sentence. No marketing language or unverifiable claims.
+      placeholder: "Typed SDK with webhook helpers and broad API coverage."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Inclusion criteria
+      options:
+        - label: The wrapper is maintained and works with the current upstream API
+          required: true
+        - label: The wrapper has docs with install and usage examples
+          required: true
+        - label: The wrapper has a license
+          required: true
+        - label: The package link and GitHub link are valid
+          required: true
+        - label: This is not spam, paid placement, or a general HTTP client
+          required: true
+        - label: I have checked that this repo is not already listed
+          required: true

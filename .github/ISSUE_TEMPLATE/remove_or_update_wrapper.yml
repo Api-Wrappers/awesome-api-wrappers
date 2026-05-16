@@ -1,0 +1,67 @@
+name: Remove or update a wrapper
+description: Report a listed wrapper that should be removed or updated.
+title: "Update: <repo-name>"
+labels: ["needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for stale packages, archived repos, broken links, incorrect metadata, or wrappers that no longer meet the list criteria.
+
+  - type: input
+    id: name
+    attributes:
+      label: Listed wrapper
+      description: Name as it appears in README.md.
+      placeholder: "discord.py"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: request_type
+    attributes:
+      label: Request type
+      options:
+        - Update package link
+        - Update GitHub link
+        - Update notes
+        - Move category
+        - Remove unmaintained wrapper
+        - Remove archived wrapper
+        - Remove spam or invalid entry
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: current_url
+    attributes:
+      label: Current URL
+      description: Link currently shown in the README, if relevant.
+      placeholder: "https://github.com/owner/repo"
+
+  - type: input
+    id: replacement_url
+    attributes:
+      label: Replacement URL
+      description: New package or repository link, if known.
+      placeholder: "https://github.com/new-owner/repo"
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Explain what changed and include evidence when possible.
+      placeholder: "The repository was archived on YYYY-MM-DD, and the package README points to a replacement project."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checks
+      options:
+        - label: I checked the current README entry
+          required: true
+        - label: I included a source or explanation for the requested update
+          required: true

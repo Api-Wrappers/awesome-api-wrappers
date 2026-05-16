@@ -3,6 +3,29 @@ import { join } from "node:path";
 
 const README_PATH = join(process.cwd(), "README.md");
 
+const REQUIRED_CATEGORIES = [
+  "Payments",
+  "Communication",
+  "Media / Entertainment",
+  "Gaming",
+  "Anime / Manga",
+  "Social",
+  "Cloud / Infrastructure",
+  "AI / ML",
+  "Developer Tools",
+  "Misc",
+];
+
+const TABLE_HEADER = [
+  "Name",
+  "API",
+  "Language",
+  "Official / community",
+  "Package link",
+  "GitHub link",
+  "Notes",
+];
+
 const ALLOWED_LANGUAGES = new Set([
   "TypeScript",
   "JavaScript",
@@ -30,48 +53,53 @@ const MARKETING_WORDS = [
   "world-class",
 ];
 
-const DESCRIPTION_MAX_LENGTH = 120;
+const NOTES_MAX_LENGTH = 170;
+
+interface Row {
+  lineNum: number;
+  cells: string[];
+  raw: string;
+}
+
+interface CategoryTable {
+  headingLine: number;
+  headerLine: number;
+  separatorLine: number;
+  rows: Row[];
+}
 
 interface Violation {
+  lineNum: number;
   section: string;
-  lineNum: number;
-  entry: string;
-  issues: string[];
+  message: string;
 }
 
-interface EntryMeta {
-  name: string;
-  repoKey: string | null;
-  lineNum: number;
-  entry: string;
-}
-
-// Strip fenced code blocks while preserving line count (so line numbers stay accurate)
 function stripCodeBlocks(markdown: string): string {
   return markdown.replace(/```[\s\S]*?```/g, (match) =>
     "\n".repeat((match.match(/\n/g) ?? []).length)
   );
 }
 
-// Entry lines can wrap. Continuation lines are indented with two spaces.
-// - [name](url) – Description that is
-//   long and wraps here. `Lang` · `Official`
-function joinEntryLines(
-  lines: string[],
-  startIdx: number
-): { joined: string; endIdx: number } {
-  let joined = lines[startIdx];
-  let i = startIdx + 1;
-  while (i < lines.length && lines[i].startsWith("  ")) {
-    joined += " " + lines[i].trim();
-    i++;
-  }
-  return { joined, endIdx: i - 1 };
+function splitTableRow(line: string): string[] | null {
+  const trimmed = line.trim();
+  if (!trimmed.startsWith("|") || !trimmed.endsWith("|")) return null;
+  return trimmed
+    .slice(1, -1)
+    .split("|")
+    .map((cell) => cell.trim());
 }
 
-function parseGitHubRepo(
-  url: string
-): { owner: string; repo: string } | null {
+function isSeparatorRow(cells: string[]): boolean {
+  return cells.length > 0 && cells.every((cell) => /^:?-{3,}:?$/.test(cell));
+}
+
+function getFirstMarkdownLink(cell: string): { text: string; url: string } | null {
+  const match = cell.match(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/);
+  if (!match) return null;
+  return { text: match[1], url: match[2] };
+}
+
+function parseGitHubRepo(url: string): { owner: string; repo: string } | null {
   try {
     const parsed = new URL(url);
     if (parsed.protocol !== "https:" || parsed.hostname !== "github.com") {
@@ -80,158 +108,304 @@ function parseGitHubRepo(
 
     const parts = parsed.pathname.replace(/^\/|\/$/g, "").split("/");
     if (parts.length !== 2 || !parts[0] || !parts[1]) return null;
-
     return { owner: parts[0], repo: parts[1] };
   } catch {
     return null;
   }
 }
 
-function parseEntryMeta(joined: string, lineNum: number): EntryMeta | null {
-  const match = joined.match(/^- \[([^\]]+)\]\((https?:\/\/[^)]+)\)/);
-  if (!match) return null;
-
-  const repo = parseGitHubRepo(match[2]);
-
-  return {
-    name: match[1],
-    repoKey: repo
-      ? `${repo.owner.toLowerCase()}/${repo.repo.toLowerCase()}`
-      : null,
-    lineNum,
-    entry: joined,
-  };
-}
-
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function validateEntry(joined: string): string[] {
-  const issues: string[] = [];
-  const meta = parseEntryMeta(joined, 0);
-
-  // URL must be a full GitHub URL
-  const urlMatch = joined.match(/\]\((https?:\/\/[^)]+)\)/);
-  if (!urlMatch) {
-    issues.push("entry must include a full GitHub URL");
-  } else {
-    const repo = parseGitHubRepo(urlMatch[1]);
-    if (!repo) {
-      issues.push(
-        `URL must be a full GitHub repository URL, got: ${urlMatch[1]}`
-      );
-    } else if (meta && meta.name !== repo.repo) {
-      issues.push(
-        `link text must match repository name \`${repo.repo}\`, got \`${meta.name}\``
-      );
-    }
-  }
-
-  // Must have em dash (–) between link and description, not a hyphen
-  if (!joined.includes(") – ")) {
-    if (joined.includes(") - ")) {
-      issues.push('use an em dash (–) not a hyphen (-) after the link');
-    } else {
-      issues.push('missing em dash (–) between link and description');
-    }
-    // Can't meaningfully check the rest without knowing where the description starts
-    return issues;
-  }
-
-  // Must end with `Language` · `Official` or `Language` · `Community`
-  const trailingMatch = joined.match(/`([^`]+)` · `(Official|Community)`$/);
-  if (!trailingMatch) {
-    issues.push(
-      "must end with `Language` · `Official` or `Language` · `Community`"
-    );
-  } else {
-    const lang = trailingMatch[1];
-    if (!ALLOWED_LANGUAGES.has(lang)) {
-      issues.push(
-        `unknown language tag \`${lang}\` — allowed: ${[...ALLOWED_LANGUAGES].join(", ")}`
-      );
-    }
-  }
-
-  // Description must end with a period (immediately before the language tag)
-  const beforeTags = joined
-    .replace(/\s*`[^`]+` · `(?:Official|Community)`$/, "")
-    .trim();
-  if (!beforeTags.endsWith(".")) {
-    issues.push("description must end with a period");
-  }
-
-  const descriptionMatch = beforeTags.match(/\) – (.+)$/);
-  if (descriptionMatch) {
-    const descriptionLength = descriptionMatch[1].length;
-    if (descriptionLength >= DESCRIPTION_MAX_LENGTH) {
-      issues.push(
-        `description must be under ${DESCRIPTION_MAX_LENGTH} characters (${descriptionLength})`
-      );
-    }
-  }
-
-  // No marketing language
-  const lower = joined.toLowerCase();
+function hasMarketingLanguage(value: string): string | null {
   for (const word of MARKETING_WORDS) {
     const pattern = new RegExp(`\\b${escapeRegExp(word)}\\b`, "i");
-    if (pattern.test(lower)) {
-      issues.push(`contains marketing word: "${word}"`);
+    if (pattern.test(value)) return word;
+  }
+  return null;
+}
+
+function readReadme(): string {
+  try {
+    return readFileSync(README_PATH, "utf-8");
+  } catch {
+    console.error(`Error: could not read ${README_PATH}`);
+    process.exit(1);
+  }
+}
+
+function findCategoryTables(lines: string[]): {
+  tables: Map<string, CategoryTable>;
+  violations: Violation[];
+} {
+  const tables = new Map<string, CategoryTable>();
+  const violations: Violation[] = [];
+  let inCategories = false;
+  let categoryOrder: string[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    if (line.startsWith("## ")) {
+      inCategories = line.trim() === "## Categories";
+      continue;
+    }
+
+    if (!inCategories || !line.startsWith("### ")) continue;
+
+    const category = line.slice(4).trim();
+    categoryOrder.push(category);
+
+    if (!REQUIRED_CATEGORIES.includes(category)) {
+      violations.push({
+        lineNum: i + 1,
+        section: category,
+        message: `unexpected category; allowed categories are: ${REQUIRED_CATEGORIES.join(", ")}`,
+      });
+    }
+
+    let headerIdx = i + 1;
+    while (headerIdx < lines.length && lines[headerIdx].trim() === "") {
+      headerIdx++;
+    }
+
+    const header = splitTableRow(lines[headerIdx] ?? "");
+    if (!header) {
+      violations.push({
+        lineNum: i + 1,
+        section: category,
+        message: "category must start with a markdown table",
+      });
+      continue;
+    }
+
+    if (header.join("\u0000") !== TABLE_HEADER.join("\u0000")) {
+      violations.push({
+        lineNum: headerIdx + 1,
+        section: category,
+        message: `table header must be: | ${TABLE_HEADER.join(" | ")} |`,
+      });
+    }
+
+    const separatorIdx = headerIdx + 1;
+    const separator = splitTableRow(lines[separatorIdx] ?? "");
+    if (!separator || !isSeparatorRow(separator)) {
+      violations.push({
+        lineNum: separatorIdx + 1,
+        section: category,
+        message: "table header must be followed by a markdown separator row",
+      });
+    }
+
+    const rows: Row[] = [];
+    let rowIdx = separatorIdx + 1;
+    while (rowIdx < lines.length) {
+      const rowLine = lines[rowIdx];
+      if (rowLine.startsWith("### ") || rowLine.startsWith("## ")) break;
+      if (rowLine.trim() === "") break;
+
+      const cells = splitTableRow(rowLine);
+      if (!cells) {
+        violations.push({
+          lineNum: rowIdx + 1,
+          section: category,
+          message: "expected a markdown table row",
+        });
+      } else {
+        rows.push({ lineNum: rowIdx + 1, cells, raw: rowLine });
+      }
+
+      rowIdx++;
+    }
+
+    tables.set(category, {
+      headingLine: i + 1,
+      headerLine: headerIdx + 1,
+      separatorLine: separatorIdx + 1,
+      rows,
+    });
+  }
+
+  const missing = REQUIRED_CATEGORIES.filter((category) => !tables.has(category));
+  for (const category of missing) {
+    violations.push({
+      lineNum: 1,
+      section: category,
+      message: "required category is missing",
+    });
+  }
+
+  const expectedOrder = REQUIRED_CATEGORIES.join("\u0000");
+  const actualOrder = categoryOrder.join("\u0000");
+  if (actualOrder !== expectedOrder) {
+    violations.push({
+      lineNum: 1,
+      section: "Categories",
+      message: `categories must appear in this order: ${REQUIRED_CATEGORIES.join(", ")}`,
+    });
+  }
+
+  return { tables, violations };
+}
+
+function validateRow(
+  category: string,
+  row: Row,
+  seenRepos: Map<string, Row>
+): Violation[] {
+  const violations: Violation[] = [];
+
+  if (row.cells.length !== TABLE_HEADER.length) {
+    return [
+      {
+        lineNum: row.lineNum,
+        section: category,
+        message: `expected ${TABLE_HEADER.length} table cells, got ${row.cells.length}`,
+      },
+    ];
+  }
+
+  const [name, api, language, ownership, packageLink, githubLink, notes] =
+    row.cells;
+
+  const requiredCells = [
+    ["Name", name],
+    ["API", api],
+    ["Language", language],
+    ["Official / community", ownership],
+    ["Package link", packageLink],
+    ["GitHub link", githubLink],
+    ["Notes", notes],
+  ];
+
+  for (const [label, value] of requiredCells) {
+    if (!value.trim()) {
+      violations.push({
+        lineNum: row.lineNum,
+        section: category,
+        message: `${label} must not be empty`,
+      });
     }
   }
 
-  return issues;
-}
+  if (!ALLOWED_LANGUAGES.has(language)) {
+    violations.push({
+      lineNum: row.lineNum,
+      section: category,
+      message: `unknown language \`${language}\`; allowed: ${[...ALLOWED_LANGUAGES].join(", ")}`,
+    });
+  }
 
-function validateSectionOrder(
-  section: string,
-  entries: EntryMeta[]
-): Violation[] {
-  const violations: Violation[] = [];
-  const sorted = [...entries].sort((a, b) =>
-    a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
-  );
+  if (ownership !== "Official" && ownership !== "Community") {
+    violations.push({
+      lineNum: row.lineNum,
+      section: category,
+      message: "Official / community must be `Official` or `Community`",
+    });
+  }
 
-  for (let i = 0; i < entries.length; i++) {
-    if (entries[i].name !== sorted[i].name) {
+  const pkg = getFirstMarkdownLink(packageLink);
+  if (!pkg) {
+    violations.push({
+      lineNum: row.lineNum,
+      section: category,
+      message: "Package link must be a markdown link to an https URL",
+    });
+  }
+
+  const github = getFirstMarkdownLink(githubLink);
+  if (!github) {
+    violations.push({
+      lineNum: row.lineNum,
+      section: category,
+      message: "GitHub link must be a markdown link to an https GitHub repo URL",
+    });
+  } else {
+    const repo = parseGitHubRepo(github.url);
+    if (!repo) {
       violations.push({
-        section,
-        lineNum: entries[i].lineNum,
-        entry: entries[i].entry,
-        issues: [
-          `entries must be sorted alphabetically; expected \`${sorted[i].name}\` here`,
-        ],
+        lineNum: row.lineNum,
+        section: category,
+        message: `GitHub link must point to a repository, got ${github.url}`,
       });
-      break;
+    } else {
+      const key = `${repo.owner.toLowerCase()}/${repo.repo.toLowerCase()}`;
+      const existing = seenRepos.get(key);
+      if (existing) {
+        violations.push({
+          lineNum: row.lineNum,
+          section: category,
+          message: `duplicate GitHub repository also listed on line ${existing.lineNum}`,
+        });
+      } else {
+        seenRepos.set(key, row);
+      }
     }
+  }
+
+  if (!notes.endsWith(".")) {
+    violations.push({
+      lineNum: row.lineNum,
+      section: category,
+      message: "Notes must be one sentence ending with a period",
+    });
+  }
+
+  if (notes.length > NOTES_MAX_LENGTH) {
+    violations.push({
+      lineNum: row.lineNum,
+      section: category,
+      message: `Notes must be ${NOTES_MAX_LENGTH} characters or fewer (${notes.length})`,
+    });
+  }
+
+  const marketingWord = hasMarketingLanguage(notes);
+  if (marketingWord) {
+    violations.push({
+      lineNum: row.lineNum,
+      section: category,
+      message: `Notes contain marketing word: "${marketingWord}"`,
+    });
   }
 
   return violations;
 }
 
-function validateSectionDuplicates(
-  section: string,
-  entries: EntryMeta[]
-): Violation[] {
+function validateTableRows(tables: Map<string, CategoryTable>): Violation[] {
   const violations: Violation[] = [];
-  const seen = new Map<string, EntryMeta>();
+  const seenRepos = new Map<string, Row>();
 
-  for (const entry of entries) {
-    if (!entry.repoKey) continue;
+  for (const category of REQUIRED_CATEGORIES) {
+    const table = tables.get(category);
+    if (!table) continue;
 
-    const existing = seen.get(entry.repoKey);
-    if (existing) {
+    if (table.rows.length === 0) {
       violations.push({
-        section,
-        lineNum: entry.lineNum,
-        entry: entry.entry,
-        issues: [
-          `duplicate repository entry also listed on line ${existing.lineNum}`,
-        ],
+        lineNum: table.headingLine,
+        section: category,
+        message: "category table must contain at least one entry",
       });
-    } else {
-      seen.set(entry.repoKey, entry);
+      continue;
+    }
+
+    for (const row of table.rows) {
+      violations.push(...validateRow(category, row, seenRepos));
+    }
+
+    const names = table.rows.map((row) => row.cells[0] ?? "");
+    const sorted = [...names].sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: "base" })
+    );
+    for (let i = 0; i < names.length; i++) {
+      if (names[i] !== sorted[i]) {
+        violations.push({
+          lineNum: table.rows[i].lineNum,
+          section: category,
+          message: `entries must be sorted alphabetically; expected \`${sorted[i]}\` here`,
+        });
+        break;
+      }
     }
   }
 
@@ -239,94 +413,24 @@ function validateSectionDuplicates(
 }
 
 function run(): void {
-  let markdown = "";
-  try {
-    markdown = readFileSync(README_PATH, "utf-8");
-  } catch {
-    console.error(`Error: could not read ${README_PATH}`);
-    process.exit(1);
-  }
-
+  const markdown = readReadme();
   const lines = stripCodeBlocks(markdown).split("\n");
-  const violations: Violation[] = [];
-  const entriesBySection = new Map<string, EntryMeta[]>();
+  const { tables, violations } = findCategoryTables(lines);
 
-  // Rather than hardcoding section names, track position in the document.
-  // Wrapper entries appear in two places:
-  //   ## Maintainer Picks  (a top-level section)
-  //   ## By Category       (subsections under this heading)
-  // Everything else (Related Lists, Contributors, etc.) is skipped.
-  let inMaintainerPicks = false;
-  let inByCategory = false;
-  let inCategorySubsection = false;
-  let currentSection = "";
-
-  let i = 0;
-  while (i < lines.length) {
-    const line = lines[i];
-
-    if (line.startsWith("## ")) {
-      const heading = line.slice(3).trim();
-      inMaintainerPicks = heading === "Maintainer Picks";
-      inByCategory = heading === "By Category";
-      inCategorySubsection = false;
-      currentSection = heading;
-    } else if (line.startsWith("### ") && inByCategory) {
-      inCategorySubsection = true;
-      // Strip leading emoji for a readable section name in error output
-      currentSection = line.slice(4).replace(/^\S+\s+/, "").trim();
-    }
-
-    const inValidatedSection =
-      inMaintainerPicks || (inByCategory && inCategorySubsection);
-
-    if (inValidatedSection && line.startsWith("- [")) {
-      const { joined, endIdx } = joinEntryLines(lines, i);
-      const issues = validateEntry(joined);
-      const meta = parseEntryMeta(joined, i + 1);
-
-      if (meta) {
-        const sectionEntries = entriesBySection.get(currentSection) ?? [];
-        sectionEntries.push(meta);
-        entriesBySection.set(currentSection, sectionEntries);
-      }
-
-      if (issues.length > 0) {
-        violations.push({
-          section: currentSection,
-          lineNum: i + 1,
-          entry: joined,
-          issues,
-        });
-      }
-      i = endIdx + 1;
-      continue;
-    }
-
-    i++;
-  }
-
-  for (const [section, entries] of entriesBySection) {
-    violations.push(...validateSectionOrder(section, entries));
-    violations.push(...validateSectionDuplicates(section, entries));
-  }
+  violations.push(...validateTableRows(tables));
 
   if (violations.length === 0) {
-    console.log("✅  All entries pass format validation.");
+    console.log("✅  All category tables pass validation.");
     return;
   }
 
-  console.log(`❌  ${violations.length} entry format violation(s):\n`);
-  for (const v of violations) {
-    const preview =
-      v.entry.length > 100 ? v.entry.slice(0, 100) + "…" : v.entry;
-    console.log(`  Line ${v.lineNum} [${v.section}]:`);
-    console.log(`    ${preview}`);
-    for (const issue of v.issues) {
-      console.log(`    → ${issue}`);
-    }
-    console.log();
+  console.log(`❌  ${violations.length} table validation issue(s):\n`);
+  for (const violation of violations) {
+    console.log(
+      `  Line ${violation.lineNum} [${violation.section}]: ${violation.message}`
+    );
   }
+  console.log();
 
   process.exit(1);
 }

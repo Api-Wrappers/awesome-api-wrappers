@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        New categories are only added when there are at least 3 high-quality entries to populate them.
+        New categories are only added when there are at least 3 maintained entries to populate them.
         Please provide all 3 entries below.
 
   - type: input
@@ -29,10 +29,10 @@ body:
     id: entries
     attributes:
       label: Initial entries (minimum 3)
-      description: One entry per line in the standard format.
+      description: One table row per entry in the standard format.
       placeholder: |
-        - [repo-name](https://github.com/owner/repo) `Language` – Description.
-        - [repo-name](https://github.com/owner/repo) `Language` – Description.
-        - [repo-name](https://github.com/owner/repo) `Language` – Description.
+        | repo-one | API name | TypeScript | Official | [npm](https://www.npmjs.com/package/example-one) | [GitHub](https://github.com/owner/repo-one) | Short factual note. |
+        | repo-two | API name | Python | Community | [PyPI](https://pypi.org/project/example-two/) | [GitHub](https://github.com/owner/repo-two) | Short factual note. |
+        | repo-three | API name | Go | Community | [pkg.go.dev](https://pkg.go.dev/github.com/owner/repo-three) | [GitHub](https://github.com/owner/repo-three) | Short factual note. |
     validations:
       required: true
