@@ -131,6 +131,7 @@ criteria for every project.
 | node-twitter-api-v2 | Twitter/X API | TypeScript | Community | [npm](https://www.npmjs.com/package/twitter-api-v2) | [GitHub](https://github.com/PLhery/node-twitter-api-v2) | TypeScript client for Twitter/X API v1.1, v2, OAuth, streams, and media uploads. |
 | praw | Reddit | Python | Community | [PyPI](https://pypi.org/project/praw/) | [GitHub](https://github.com/praw-dev/praw) | Python Reddit API wrapper with an idiomatic object model. |
 | tweepy | Twitter/X API | Python | Community | [PyPI](https://pypi.org/project/tweepy/) | [GitHub](https://github.com/tweepy/tweepy) | Python Twitter/X API client with OAuth, streaming, and async support. |
+| x-twitter-scraper | Xquik API | TypeScript | Official | [npm](https://www.npmjs.com/package/x-twitter-scraper) | [GitHub](https://github.com/Xquik-dev/x-twitter-scraper-typescript) | TypeScript SDK for X search, extraction, monitors, webhooks, and REST workflows. |
 
 ### Cloud / Infrastructure
 
