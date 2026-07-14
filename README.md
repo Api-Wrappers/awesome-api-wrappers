@@ -166,6 +166,7 @@ criteria for every project.
 | Name | API | Language | Official / community | Package link | GitHub link | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
 | google-maps-services-js | Google Maps Platform | TypeScript | Official | [npm](https://www.npmjs.com/package/@googlemaps/google-maps-services-js) | [GitHub](https://github.com/googlemaps/google-maps-services-js) | Node client for geocoding, directions, distance matrix, elevation, and Places. |
+| gridnews-sdk | GridNews | TypeScript | Official | [npm](https://www.npmjs.com/package/@gridnews/sdk) | [GitHub](https://github.com/gridnews/sdk) | Typed REST and streaming client for GridNews market news, press releases, and sentiment. |
 | mapbox-sdk-js | Mapbox | TypeScript | Official | [npm](https://www.npmjs.com/package/@mapbox/mapbox-sdk) | [GitHub](https://github.com/mapbox/mapbox-sdk-js) | JavaScript SDK for Mapbox web services including geocoding and uploads. |
 
 ---
