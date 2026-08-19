@@ -70,9 +70,11 @@ criteria for every project.
 
 | Name | API | Package link | GitHub link | Notes |
 | --- | --- | --- | --- | --- |
+| api-core | Shared HTTP runtime | [npm](https://www.npmjs.com/package/@api-wrappers/api-core) | [GitHub](https://github.com/Api-Wrappers/api-core) | Shared request runtime with retries, timeouts, auth helpers, plugins, caching, rate limiting, GraphQL, and custom transports. |
 | anilist-wrapper | AniList | [npm](https://www.npmjs.com/package/@api-wrappers/anilist-wrapper) | [GitHub](https://github.com/Api-Wrappers/anilist-wrapper) | Typed GraphQL workflows for anime, manga, users, staff, characters, and media lists. |
 | igdb-wrapper | IGDB | [npm](https://www.npmjs.com/package/@api-wrappers/igdb-wrapper) | [GitHub](https://github.com/Api-Wrappers/igdb-wrapper) | Type-safe APICalypse queries, OAuth helpers, pagination, and image URL utilities. |
 | tmdb-wrapper | TMDB | [npm](https://www.npmjs.com/package/@api-wrappers/tmdb-wrapper) | [GitHub](https://github.com/Api-Wrappers/tmdb-wrapper) | Typed movie, TV, search, discover, watch-provider, session, and image workflows. |
+| trakt-wrapper | Trakt | [npm](https://www.npmjs.com/package/@api-wrappers/trakt-wrapper) | [GitHub](https://github.com/Api-Wrappers/trakt-wrapper) | Typed watchlists, history, ratings, scrobbling, OAuth, sync workflows, and pagination. |
 
 ---
 
@@ -108,6 +110,7 @@ criteria for every project.
 | spotify-web-api-ts-sdk | Spotify Web API | TypeScript | Official | [npm](https://www.npmjs.com/package/@spotify/web-api-ts-sdk) | [GitHub](https://github.com/spotify/spotify-web-api-ts-sdk) | Official TypeScript SDK for Spotify catalog, playback, playlist, and user APIs. |
 | spotipy | Spotify Web API | Python | Community | [PyPI](https://pypi.org/project/spotipy/) | [GitHub](https://github.com/spotipy-dev/spotipy) | Lightweight Python client for Spotify endpoints and OAuth flows. |
 | tmdb-wrapper | TMDB | TypeScript | Community | [npm](https://www.npmjs.com/package/@api-wrappers/tmdb-wrapper) | [GitHub](https://github.com/Api-Wrappers/tmdb-wrapper) | Typed TMDB v3 client for movies, TV, search, discover, images, and sessions. |
+| trakt-wrapper | Trakt | TypeScript | Community | [npm](https://www.npmjs.com/package/@api-wrappers/trakt-wrapper) | [GitHub](https://github.com/Api-Wrappers/trakt-wrapper) | Typed Trakt client for watchlists, history, ratings, scrobbling, OAuth, sync, and pagination. |
 
 ### Gaming
 
